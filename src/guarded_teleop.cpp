@@ -58,10 +58,6 @@ Planner::Planner(){
         home.pose.orientation.w = .999995;
 
 }
-//void Planner::home_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& start_pos){
-//        home.header = start_pos->header;
-//        home.pose = start_pos->pose.pose;
-//}
 
 void Planner::teleop_callback(const geometry_msgs::Twist::ConstPtr& user_input){
         teleop = * user_input;
@@ -81,13 +77,6 @@ void Planner::sub_callback(const sensor_msgs::LaserScan::ConstPtr& scan){
 		}
 	}
 
-	//if(angle < 125){
-	//	command.angular.z = 1;
-	//}
-	//if(angle > 125){
-	//	command.angular.z = -1;
-	//}
-
         if(RTH){
           if(plan_sent == false){
             home.header.stamp = Time::now();
@@ -97,16 +86,13 @@ void Planner::sub_callback(const sensor_msgs::LaserScan::ConstPtr& scan){
           }
         }
         else if(min_dist < (stop_dist - tolerance)){
-	//	command.angular.z = -10;
 		command.linear.x = -.1;
 	        pub.publish(command);
 	}
-        else if(min_dist > (stop_dist )){//+ tolerance)){
-	//	command.angular.z = 0;
+        else if(min_dist > (stop_dist )){
 		pub.publish(teleop);
 	}
         else if (min_dist < (stop_dist + tolerance) && min_dist > (stop_dist - tolerance)){
-	//	command.angular.z = 0;
 		command.linear.x = 0.0001;
 	        pub.publish(command);
 	}
@@ -116,13 +102,9 @@ int main(int argc, char **argv) {
 	// Initialize the subscriber nodd
 	init(argc, argv, "my_planner");
 	Planner pub;
-        //MultiThreadedSpinner spinner(2);
-        //spinner.spin();
-        ///*
         Rate r(10);
         while(ros::ok()){
           spin();
           r.sleep();
         }
-        //*/
 }
