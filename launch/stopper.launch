@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find turtlebot_stage)/launch/turtlebot_in_stage.launch" />
+  <node name="my_planner" pkg="exercise1" type="exercise1_node" output="screen" />
+  <param name="stop_dist" type="double" value=".75" />
+  <param name="tolerance" type="double" value=".00001" />
+</launch>
